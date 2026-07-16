@@ -1,0 +1,32 @@
+# Logs
+*.log
+brain_sync.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config pessoal (não committar)
+config.yaml
+
+# Estado de sync (local)
+.sync_state.json

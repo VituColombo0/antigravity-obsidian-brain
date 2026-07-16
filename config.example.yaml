@@ -1,0 +1,52 @@
+# ==============================================================
+# Antigravity Obsidian Brain — Configuração
+# ==============================================================
+# Copie este arquivo para config.yaml e ajuste para sua máquina.
+
+# --- Vault do Obsidian ---
+vault:
+  # Caminho do vault. Suporta ~ para home.
+  # Se não existir, será criado automaticamente.
+  path: "~/.gemini/antigravity/brain_vault"
+
+# --- Antigravity ---
+antigravity:
+  # Diretório raiz do Antigravity (detectado automaticamente)
+  # Descomente para sobrescrever:
+  # data_dir: "~/.gemini/antigravity"
+
+# --- Sincronização ---
+sync:
+  # Sincronizar automaticamente ao iniciar
+  auto: true
+  # Intervalo entre sincronizações no modo watch (minutos)
+  interval_minutes: 5
+  # Monitorar mudanças em tempo real com watchdog
+  watch_mode: true
+  # Sincronização incremental (apenas novos desde último sync)
+  incremental: true
+
+# --- Parser ---
+parser:
+  # Comprimento máximo do resumo de uma conversa (caracteres)
+  summary_max_length: 500
+  # Incluir tool calls (comandos, edits) no Markdown exportado
+  include_tool_calls: true
+  # Incluir metadados do sistema
+  include_metadata: true
+
+# --- Tags automáticas ---
+tags:
+  # Detectar linguagens de programação mencionadas
+  detect_languages: true
+  # Detectar ações (git, npm, etc)
+  detect_actions: true
+  # Tags customizadas (regex -> tag)
+  custom: {}
+  #   "Luna|Alfred": "project/luna"
+  #   "SCAN|OSINT": "project/colombo-scan"
+
+# --- Logging ---
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "brain_sync.log"
