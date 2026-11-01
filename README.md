@@ -1,191 +1,181 @@
-# 🧠 Antigravity Obsidian Brain
+# Antigravity Obsidian Brain
 
-> **Memória infinita para o Antigravity AI — toda conversa, projeto e decisão salva e sincronizada no Obsidian.**
+Ponte de sincronização bidirecional entre o ambiente do assistente Antigravity AI e vaults locais do Obsidian, viabilizando persistência estruturada de conversas, artefatos técnicos, histórico de decisões e grafos de conhecimento.
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
+[![Target: Obsidian](https://img.shields.io/badge/Target-Obsidian%20Vault-purple.svg)](https://obsidian.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Obsidian](https://img.shields.io/badge/Obsidian-Compatible-purple.svg)](https://obsidian.md)
+[![Platform: Linux / macOS / Windows](https://img.shields.io/badge/Platform-Cross--Platform-lightgrey.svg)](https://github.com/VituColombo0/antigravity-obsidian-brain)
 
 ---
 
-## 📖 O que é?
+## Visão Geral
 
-O **Antigravity Obsidian Brain** é uma ponte entre o [Antigravity AI](https://github.com/google-deepmind/antigravity) (assistente de codificação com IA) e o [Obsidian](https://obsidian.md) (app de notas em Markdown).
+O **Antigravity Obsidian Brain** atua como uma camada persistente de memória para o Antigravity AI. Em sessões padrão de desenvolvimento com agentes de IA, históricos de decisões e análises complexas de código podem se dispersar entre conversas encerradas. Esta ferramenta estrutura esses dados continuamente no formato nativo do Obsidian, gerando retroalimentação contextual para novas interações.
 
-Ele transforma o Obsidian no **cérebro permanente** do Antigravity:
+### Capacidades Centrais
 
-- 🔄 **Sincroniza automaticamente** todas as conversas, artefatos e projetos para o seu vault do Obsidian
-- 🧠 **Dá memória infinita** ao Antigravity — ele lê suas notas do Obsidian antes de cada resposta
-- 📝 **Bidirecional** — edite notas no Obsidian e o Antigravity aprende com elas
-- 🔍 **Indexa tudo** — busca por palavra-chave, tags, links entre notas
-- 🤖 **Zero configuração** — detecta automaticamente os diretórios do Antigravity
-
-### Antes vs Depois
-
-| Sem o Brain | Com o Brain |
-|---|---|
-| Antigravity esquece conversas passadas | Lembra de tudo que vocês já fizeram |
-| Contexto perdido entre sessões | Contexto acumulado permanente |
-| Sem forma de revisar decisões | Tudo navegável e pesquisável no Obsidian |
-| Conhecimento isolado por conversa | Grafo de conhecimento interconectado |
+- **Sincronização Contínua e Incremental:** Monitora logs de conversas (`transcript.jsonl`) e artefatos gerados pelo agente, espelhando alterações no vault em tempo real.
+- **Parsing Estruturado com Frontmatter:** Converte saídas brutas em notas Markdown limpas, enriquecidas com metadados YAML (data, modelo, tags de projeto, linguagens e símbolos modificados).
+- **Indexação por Wikilinks e Tags:** Estabelece links automáticos entre tarefas relacionadas (`[[01_Projects/MeuProjeto]]`), gerando um grafo navegável de conhecimento acumulado.
+- **Detecção Automática de Diretórios:** Localiza dinamicamente as instalações locais do Antigravity AI tanto em sistemas baseados em Unix (`~/.gemini/antigravity-ide`) quanto em Windows.
 
 ---
 
-## 🚀 Instalação Rápida
+## Arquitetura de Sincronização
+
+```
+┌─────────────────────────────────┐               ┌─────────────────────────────────┐
+│         Antigravity AI          │               │         Obsidian Vault          │
+│                                 │               │                                 │
+│  brain/<conv-id>/logs/          │ ───(Sync)───▶ │  04_Conversations/<ano-mes>/    │
+│    transcript.jsonl             │               │    chat_resumo.md               │
+│                                 │               │                                 │
+│  brain/<conv-id>/artifacts/     │ ───(Sync)───▶ │  05_Artifacts/                  │
+│    analysis.md, report.md       │               │    documentos_e_planos.md       │
+│                                 │               │                                 │
+│  knowledge/<ki-id>/             │ ───(Sync)───▶ │  02_Knowledge/                  │
+│    metadata.json & artifacts    │               │    base_tecnica.md              │
+│                                 │               │                                 │
+│                                 │ ──(Reindex)─▶ │  00_Atlas/Index.md              │
+│                                 │               │    MOC (Map of Content)         │
+└─────────────────────────────────┘               └─────────────────────────────────┘
+```
+
+---
+
+## Estrutura do Vault Gerado
+
+O vault é particionado segundo a metodologia PARA/Zettelkasten adaptada para desenvolvimento de software:
+
+```text
+AntigravityBrain/
+├── 00_Atlas/
+│   └── Index.md                  # Mapa central de conteúdo (MOC) e índices gerais
+├── 01_Projects/
+│   ├── Current_Projects.md       # Relação de repositórios e iniciativas ativas
+│   └── <nome_do_projeto>.md      # Registro individual por projeto
+├── 02_Knowledge/
+│   └── <topico>.md               # Itens de conhecimento técnico e padrões reutilizáveis
+├── 03_Context/
+│   ├── Antigravity_Identity.md   # Definições de persona, regras e diretrizes de prompt
+│   ├── User_Preferences.md       # Diretrizes de estilo do usuário e convenções de código
+│   └── Workspace_Guidelines.md   # Políticas e restrições de ambiente local
+├── 04_Conversations/
+│   └── YYYY-MM/
+│       └── <topico_da_sessao>.md # Transcrição sintética das conversas e prompts
+├── 05_Artifacts/
+│   └── <arquivo_de_saida>.md     # Planos de implementação, relatórios e diagramas
+└── 99_Log/
+    ├── Session_Logs.md           # Linha do tempo das interações
+    └── Sync_History.md           # Registro de auditoria do daemon de sincronização
+```
+
+---
+
+## Instalação e Configuração
 
 ### Pré-requisitos
-- Python 3.10+
+- Python 3.10 ou superior
 - [Obsidian](https://obsidian.md) instalado
-- Antigravity AI configurado (`~/.gemini/antigravity/`)
+- Antigravity AI configurado
 
-### 1. Clone o repositório
+### 1. Clonagem e Configuração do Ambiente
 
 ```bash
-git clone https://github.com/SEU_USUARIO/antigravity-obsidian-brain.git
+git clone https://github.com/VituColombo0/antigravity-obsidian-brain.git
 cd antigravity-obsidian-brain
 ```
 
-### 2. Instale
+### 2. Instalação Automática
 
+**Linux / macOS:**
 ```bash
-# Linux / macOS
-chmod +x install.sh && ./install.sh
+chmod +x install.sh
+./install.sh
+```
 
-# Windows
+**Windows:**
+```cmd
 install.bat
 ```
 
-### 3. Configure (opcional)
+### 3. Configuração de Parâmetros (`config.yaml`)
 
-Edite `config.yaml` para ajustar caminhos e preferências:
+Se necessário, ajuste os diretórios e políticas de sincronização:
 
 ```yaml
 vault:
-  path: "~/ObsidianVault/AntigravityBrain"  # Onde criar/usar o vault
-  
+  path: "~/ObsidianVault/AntigravityBrain"  # Caminho de destino do vault
+  create_if_missing: true
+
+antigravity:
+  app_data_dir: "~/.gemini/antigravity-ide" # Diretório base de telemetria
+
 sync:
-  auto: true              # Sincronizar automaticamente
-  interval_minutes: 5     # Intervalo entre syncs
-  watch_mode: true        # Monitorar mudanças em tempo real
-```
-
-### 4. Primeira sincronização
-
-```bash
-python -m brain sync
-```
-
-### 5. Abra no Obsidian
-
-Abra o Obsidian → "Open folder as vault" → Selecione a pasta do vault configurada.
-
----
-
-## 📂 Estrutura do Vault
-
-O Brain organiza seu vault assim:
-
-```
-AntigravityBrain/
-├── 00_Atlas/
-│   └── Index.md                    # 🗺️ Mapa de todo o vault
-├── 01_Projects/
-│   ├── Current_Projects.md         # 📋 Lista de projetos ativos
-│   └── <nome_do_projeto>.md        # 📁 Uma nota por projeto
-├── 02_Knowledge/
-│   └── <topico>.md                 # 📚 Base de conhecimento técnico
-├── 03_Context/
-│   ├── Antigravity_Identity.md     # 🤖 Personalidade e regras
-│   ├── User_Preferences.md         # ⭐ Preferências do usuário
-│   └── Workspace_Guidelines.md     # 🏢 Regras do workspace
-├── 04_Conversations/
-│   ├── 2026-07/
-│   │   ├── Refactoring_Luna.md     # 💬 Conversa parseada
-│   │   └── ...
-│   └── ...
-├── 05_Artifacts/
-│   └── <artefato>.md               # 📦 Documentos e análises criados
-└── 99_Log/
-    ├── Session_Logs.md             # 📅 Log de sessões
-    └── Sync_History.md             # 🔄 Histórico de sincronizações
+  auto: true
+  interval_minutes: 5
+  incremental_only: true
+  watch_mode: true
 ```
 
 ---
 
-## 🛠️ Comandos
+## Linha de Comando (CLI)
+
+O módulo oferece interface CLI para execução manual, diagnósticos e automações:
 
 ```bash
-# Primeira sincronização completa
+# Executa a sincronização completa inicial
 python -m brain sync
 
-# Sincronização rápida (apenas novos)
+# Executa sincronização incremental (apenas sessões novas ou alteradas)
 python -m brain sync --incremental
 
-# Modo daemon (roda em background, sincroniza automaticamente)
+# Inicia o daemon contínuo com monitoramento de filesystem (watch mode)
 python -m brain watch
 
-# Status do vault
+# Exibe o status da conexão, quantidade de notas e integridade do vault
 python -m brain status
 
-# Recriar índices
+# Reconstrói os índices gerais e mapas de conteúdo (00_Atlas/Index.md)
 python -m brain reindex
 
-# Exportar conversa específica
+# Exporta uma conversa específica a partir de seu Conversation ID
 python -m brain export <conversation-id>
 ```
 
 ---
 
-## 🔧 Como funciona
+## Operação em Segundo Plano (Systemd no Linux)
 
-### Fluxo de Sincronização
+Para manter o serviço em execução contínua no Linux como serviço de usuário:
 
+```ini
+# ~/.config/systemd/user/antigravity-brain.service
+[Unit]
+Description=Antigravity Obsidian Brain Sync Daemon
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/antigravity-obsidian-brain
+ExecStart=/usr/bin/python3 -m brain watch
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
 ```
-┌─────────────────────┐         ┌──────────────────────┐
-│   Antigravity AI    │         │    Obsidian Vault     │
-│                     │         │                       │
-│ brain/              │ ──sync──▶ 04_Conversations/    │
-│   <id>/logs/        │         │   2026-07/chat.md     │
-│   <id>/artifacts/   │ ──sync──▶ 05_Artifacts/        │
-│                     │         │   analysis.md         │
-│ conversations/      │         │                       │
-│   <id>.pb           │         │ 00_Atlas/Index.md     │
-│                     │         │ (auto-atualizado)     │
-│ knowledge/          │ ──sync──▶ 02_Knowledge/        │
-│   <ki>/artifacts/   │         │   topic.md            │
-└─────────────────────┘         └──────────────────────┘
+
+Ativação do serviço:
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now antigravity-brain.service
 ```
 
-### Parsing Inteligente
-
-O Brain não faz um dump cru dos dados. Ele:
-
-1. **Parseia** os logs brutos (JSON) em Markdown limpo e legível
-2. **Extrai** metadados (data, assunto, arquivos tocados, comandos rodados)
-3. **Gera tags** automáticas (`#project/luna`, `#language/python`, `#action/git`)
-4. **Cria wikilinks** entre notas relacionadas (`[[01_Projects/Luna]]`)
-5. **Resume** conversas longas em resumos executivos
-
 ---
 
-## 🤝 Contribuindo
+## Licença
 
-1. Fork o repositório
-2. Crie sua branch (`git checkout -b feature/minha-feature`)
-3. Commit suas mudanças (`git commit -m 'feat: minha feature'`)
-4. Push para a branch (`git push origin feature/minha-feature`)
-5. Abra um Pull Request
-
----
-
-## 📄 Licença
-
-MIT — use como quiser. Veja [LICENSE](LICENSE) para detalhes.
-
----
-
-## 💡 Inspiração
-
-Este projeto nasceu da necessidade de dar **memória permanente** ao Antigravity. Sem ele, cada conversa é um universo isolado. Com ele, o Antigravity evolui a cada sessão, lembrando de seus projetos, preferências, erros passados e decisões de design.
-
-> *"A memória é a mãe de toda sabedoria."* — Ésquilo
+Distribuído sob a licença MIT. Consulte [LICENSE](LICENSE) para mais informações.
